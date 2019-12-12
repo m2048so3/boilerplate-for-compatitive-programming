@@ -1,8 +1,8 @@
-bool isprime(const ul& n) {
+bool isprime(const sl& n) {
   if (n < 2 || n % 2 == 0) {
     return false;
   }
-  for (ul i = 1; i * i < n; i += 2) {
+  for (sl i = 1; i * i < n; i += 2) {
     if (n % i == 0) {
       return false;
     }
@@ -10,9 +10,10 @@ bool isprime(const ul& n) {
   return true;
 }
 
-std::set<ul> divisors(const ul& n) {
-  std::set<ul> div;
-  for (ul i = 1; i * i <= n; i++) {
+std::set<sl> divisors(const sl& n) {
+  MASSERT(0 < n);
+  std::set<sl> div;
+  for (sl i = 1; i * i <= n; i++) {
     if (n % i == 0) {
       div.insert(i);
       if (n / i != i) {
@@ -66,8 +67,10 @@ sl modinv(const sl& a, const sl& m) {
   return res;
 }
 
+// support positive power only
 template <class T>
-T powmod(T x, ul y, ul z) {
+T powmod(T x, sl y, sl z) {
+  MASSERT(0 < y);
   T cur = x;
   T res = 1;
   while (y != 0) {
