@@ -9,6 +9,7 @@
 #include <iomanip>
 #include <numeric>
 #include <utility>
+#include <numeric>
 #include <string>
 #include <vector>
 #include <cmath>
@@ -24,6 +25,7 @@
 #define FORi(var, min, max) for (sl (var) = (min); (var) < (max); ++(var))
 // [min, max)
 #define FORi_INV(var, min, max) for (sl (var) = (max) - 1; (var) + 1 > (min); --(var))
+
 #define FORITER(var, iter) for (auto (iter) = (var).begin(); (iter) != (var).end(); (iter)++)
 #define FORITER_INV(var, iter) for (auto (iter) = (var).rbegin(); (iter) != (var).rend(); (iter)++)
 

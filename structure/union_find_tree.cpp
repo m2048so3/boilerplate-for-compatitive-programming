@@ -1,7 +1,7 @@
-template <ui N>
+template <si N>
 class UnionFindTree {
-  ui arr[N];
-  ui rank[N];
+  si arr[N];
+  si rank[N];
 
   public:
   UnionFindTree(void) {
@@ -11,8 +11,9 @@ class UnionFindTree {
     }
   }
 
-  ui root(ui idx) {
-    ui parent = arr[idx];
+  si root(si idx) {
+    MASSERT(LELT(0, idx, N));
+    si parent = arr[idx];
     while (parent != arr[parent]) {
       parent = arr[parent];
     }
@@ -20,13 +21,17 @@ class UnionFindTree {
     return parent;
   }
 
-  bool is_connected(ui a, ui b) {
+  bool is_connected(si a, si b) {
+    MASSERT(LELT(0, a, N));
+    MASSERT(LELT(0, b, N));
     return root(a) == root(b);
   }
 
-  void unite(ui a, ui b) {
-    ui ra = root(a);
-    ui rb = root(b);
+  void unite(si a, si b) {
+    MASSERT(LELT(0, a, N));
+    MASSERT(LELT(0, b, N));
+    si ra = root(a);
+    si rb = root(b);
 
     if (ra == rb) {
       return;

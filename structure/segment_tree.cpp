@@ -19,33 +19,33 @@ class SegmentTree {
   T tree[2 * (1 << K) - 1];
 
   inline si parent(si i) const {
-    assert(LELT(0, i, 2 * N - 1));
-    assert(i != 0);
+    MASSERT(LELT(0, i, 2 * N - 1));
+    MASSERT(i != 0);
     return (i - 1) / 2;
   }
 
   inline si leaf(si i) const {
-    assert(LELT(0, i, 2 * N - 1));
+    MASSERT(LELT(0, i, 2 * N - 1));
     return i + N - 1;
   }
 
   inline si left(si i) const {
-    assert(LELT(0, i, 2 * N - 1));
+    MASSERT(LELT(0, i, 2 * N - 1));
     return i * 2 + 1;
   }
 
   inline si right(si i) const {
-    assert(LELT(0, i, 2 * N - 1));
+    MASSERT(LELT(0, i, 2 * N - 1));
     return i * 2 + 2;
   }
 
   inline bool is_leaf(si i) const {
-    assert(LELT(0, i, 2 * N - 1));
+    MASSERT(LELT(0, i, 2 * N - 1));
     return (N - 1 <= i);
   }
 
   inline bool is_root(si i) const {
-    assert(LELT(0, i, 2 * N - 1));
+    MASSERT(LELT(0, i, 2 * N - 1));
     return i == 0;
   }
 
@@ -80,7 +80,7 @@ public:
   }
 
   void update(si i, T x) {
-    assert(LELT(0, i, 2 * N - 1));
+    MASSERT(LELT(0, i, 2 * N - 1));
     si cur = leaf(i);
     tree[cur] = x;
     while (!is_root(cur)) {
@@ -91,7 +91,7 @@ public:
 
   // [a, b)
   T query(si a, si b) {
-    assert(LELT(0, a, b) && b <= 2 * N - 1);
+    MASSERT(LELT(0, a, b) && b <= 2 * N - 1);
     T resL = monoid.identity;
     T resR = monoid.identity;
     si vL = leaf(a);

@@ -22,33 +22,33 @@ class LazyPropagationSegmentTree {
   E lazytree[2 * (1 << K) - 1];
 
   inline si parent(si i) {
-    assert(LELT(0, i, 2 * N - 1));
-    assert(i != 0);
+    MASSERT(LELT(0, i, 2 * N - 1));
+    MASSERT(i != 0);
     return (i - 1) / 2;
   }
 
   inline si left(si i) {
-    assert(LELT(0, i, 2 * N - 1));
+    MASSERT(LELT(0, i, 2 * N - 1));
     return i * 2 + 1;
   }
 
   inline si right(si i) {
-    assert(LELT(0, i, 2 * N - 1));
+    MASSERT(LELT(0, i, 2 * N - 1));
     return i * 2 + 2;
   }
 
   inline si leaf(si i) {
-    assert(LELT(0, i, N));
+    MASSERT(LELT(0, i, N));
     return i + N - 1;
   }
 
   inline bool is_leaf(si i) {
-    assert(LELT(0, i, 2 * N - 1));
+    MASSERT(LELT(0, i, 2 * N - 1));
     return (N - 1 <= i);
   }
 
   inline void propagate(si idx) {
-    assert(LELT(0, idx, 2 * N - 1));
+    MASSERT(LELT(0, idx, 2 * N - 1));
     if (lazytree[idx] == operator_monoid.identity) {
       return;
     }
@@ -61,9 +61,9 @@ class LazyPropagationSegmentTree {
   }
 
   T apply_impl(si a, si b, E x, si idx, si l, si r) {
-    assert(LELT(0, l, r) && r <= (2 * N - 1));
-    assert(LELT(0, a, b) && b <= (2 * N - 1));
-    assert(LELT(0, idx, 2 * N - 1));
+    MASSERT(LELT(0, l, r) && r <= (2 * N - 1));
+    MASSERT(LELT(0, a, b) && b <= (2 * N - 1));
+    MASSERT(LELT(0, idx, 2 * N - 1));
     propagate(idx);
     if (r <= a || b <= l) {
       return tree[idx];
@@ -81,9 +81,9 @@ class LazyPropagationSegmentTree {
   }
 
   T query_impl(si a, si b, si idx, si l, si r) {
-    assert(LELT(0, l, r) && r <= (2 * N - 1));
-    assert(LELT(0, a, b) && b <= (2 * N - 1));
-    assert(LELT(0, idx, 2 * N - 1));
+    MASSERT(LELT(0, l, r) && r <= (2 * N - 1));
+    MASSERT(LELT(0, a, b) && b <= (2 * N - 1));
+    MASSERT(LELT(0, idx, 2 * N - 1));
     propagate(idx);
     if (r <= a || b <= l) {
       return monoid.identity;
@@ -131,13 +131,13 @@ public:
 
   /* operate x to [a, b) */
   void apply(si a, si b, E x) {
-    assert(LELT(0, a, b) && b <= (2 * N - 1));
+    MASSERT(LELT(0, a, b) && b <= (2 * N - 1));
     apply_impl(a, b, x, 0, 0, N);
   }
 
   // [a, b)
   T query(si a, si b) {
-    assert(LELT(0, a, b) && b <= (2 * N - 1));
+    MASSERT(LELT(0, a, b) && b <= (2 * N - 1));
     return query_impl(a, b, 0, 0, N);
   }
 };

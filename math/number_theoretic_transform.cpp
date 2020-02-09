@@ -1,7 +1,7 @@
-template <ul prime, ul generator>
+template <sl prime, sl generator>
 struct Fp {
-  const static ul p = prime;
-  const static ul g = generator;
+  const static sl p = prime;
+  const static sl g = generator;
 };
 
 using F_998244353 = Fp<998244353, 3>;
@@ -56,7 +56,7 @@ vector<sl> intt(const vector<sl>& pol) {
 
 template <class Field>
 vector<sl> convolution_ntt(const vector<sl>& _a, const vector<sl>& _b) {
-  ui K = 1;
+  sl K = 1;
   vector<sl> a = _a;
   vector<sl> b = _b;
 
