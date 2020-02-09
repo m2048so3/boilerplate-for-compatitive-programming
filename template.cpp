@@ -9,7 +9,7 @@
 #include <iomanip>
 #include <numeric>
 #include <utility>
-#include <numeric>
+#include <random>
 #include <string>
 #include <vector>
 #include <cmath>
@@ -49,10 +49,12 @@ using namespace std;
 using uc = unsigned char;
 using ui = unsigned int;
 using ul = unsigned long long int;
+using ull = __uint128_t;
 
 using sc = signed char;
 using si = signed int;
 using sl = signed long long int;
+using sll = __int128_t;
 
 using ld = long double;
 
@@ -62,6 +64,13 @@ void m_assert(const bool& cond, const sl& line, const char *condstr) {
     exit(1);
   }
 }
+
+namespace std {
+  template <>
+  struct is_integral<__int128_t> {
+    constexpr static bool value = true;
+  };
+};
 
 void solve(void) {
 }

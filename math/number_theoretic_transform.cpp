@@ -1,85 +1,96 @@
-template <sl prime, sl generator>
+template <ul prime, ul generator>
 struct Fp {
-  const static sl p = prime;
-  const static sl g = generator;
+  const static ul p = prime;
+  const static ul g = generator;
 };
 
+using F_167772161 = Fp<167772161, 3>;
+using F_469762049 = Fp<469762049, 3>;
+using F_1224736769 = Fp<1224736769, 3>;
+using F_1004535809 = Fp<1004535809, 3>;
 using F_998244353 = Fp<998244353, 3>;
+using F_985661441 = Fp<985661441, 3>;
 
 template <class Field>
-vector<sl> ntt(const vector<sl>& pol) {
-  const sl NN = pol.size();
-  if (NN == 1){
-    return pol;
+struct NTT {
+  unordered_map<ul, ul> nth_unit;
+
+  NTT() {
+    for (ul i = 2; (Field::p - 1) / i > 1; i <<= 1) {
+      nth_unit[i >> 1] = powmod(Field::g, (Field::p - 1) / i, Field::p);
+    }
   }
 
-  vector<sl> ret;
-  vector<sl> f0;
-  vector<sl> f1;
+  vector<sl> ntt(const vector<sl>& pol) {
+    const ul NN = pol.size();
 
-  auto zeta = powmod(Field::g, (Field::p - 1) / NN, Field::p);
-  // check point: (Field::p % NN) == 0?
-  auto cur = 1;
+    vector<sl> ret = pol;
+    FOR0(i, NN) {
+      ui j = i, k = 0, l = NN - 1;
+      while (l != 0) {
+        k <<= 1;
+        k |= (j & 1);
+        j >>= 1;
+        l >>= 1;
+      }
+      ret[i] = pol[k];
+    }
 
-  FOR0(i, NN / 2) {
-    f0.push_back((pol[i] + pol[i + NN / 2]) % Field::p);
-    auto t = (pol[i] + (Field::p - pol[i + NN / 2]) % Field::p) % Field::p;
-    t *= cur;
-    t %= Field::p;
-    f1.push_back(t);
-    cur = (cur * zeta) % Field::p;
+    for (ul i = 1; i < NN; i <<= 1) {
+      auto zeta = nth_unit[i];
+      for (ul j = 0; j < NN; j += 2 * i) {
+        sl cur = 1;
+        FOR0(k, i) {
+          auto x = ret[j + k];
+          auto y = (cur * ret[j + k + i]) % Field::p;
+          ret[j + k] = (x + y) % Field::p;
+          ret[j + k + i] = (x + (Field::p - y)) % Field::p;
+          if (ret[j + k + i] < 0) {
+            ret[j + k + i] += Field::p;
+          }
+          cur = (cur * zeta) % Field::p;
+        }
+      }
+    }
+
+    return ret;
   }
 
-  auto F0 = ntt<Field>(f0);
-  auto F1 = ntt<Field>(f1);
+  vector<sl> intt(const vector<sl>& pol) {
+    const ul NN = pol.size();
+    auto fpol = ntt(pol);
+    vector<sl> ret(NN);
 
-  FOR0(i, NN / 2) {
-    ret.push_back(F0[i]);
-    ret.push_back(F1[i]);
-  }
-  return ret;
-}
+    auto NNinv = modinv(NN, Field::p);
 
-template <class Field>
-vector<sl> intt(const vector<sl>& pol) {
-  const sl NN = pol.size();
-  auto fpol = ntt<Field>(pol);
-  vector<sl> ret;
-
-  auto NNinv = modinv(NN, Field::p);
-
-  FOR0(i, NN) {
-    ret.push_back((fpol[(NN - i) % NN] * NNinv) % Field::p);
-  }
-  return ret;
-}
-
-template <class Field>
-vector<sl> convolution_ntt(const vector<sl>& _a, const vector<sl>& _b) {
-  sl K = 1;
-  vector<sl> a = _a;
-  vector<sl> b = _b;
-
-  while (K < a.size() + b.size()) {
-    K <<= 1;
+    FOR0(i, NN) {
+      ret[i] = (fpol[(NN - i) % NN] * NNinv) % Field::p;
+    }
+    return ret;
   }
 
-  FORi(i, a.size(), K) {
-    a.push_back(0);
+  vector<sl> convolution_ntt(const vector<sl>& _a, const vector<sl>& _b) {
+    ui K = 1;
+    vector<sl> a = _a;
+    vector<sl> b = _b;
+
+    while (K < a.size() + b.size()) {
+      K <<= 1;
+    }
+
+    a.resize(K, 0);
+    b.resize(K, 0);
+
+    vector<sl> f1 = ntt(a);
+    vector<sl> f2 = ntt(b);
+
+    vector<sl> f3;
+    f3.resize(K);
+
+    FOR0(i, K) {
+      f3[i] = (f1[i] * f2[i]) % Field::p;
+    }
+
+    return intt(f3);
   }
-
-  FORi(i, b.size(), K) {
-    b.push_back(0);
-  }
-
-  auto f1 = ntt<Field>(a);
-  auto f2 = ntt<Field>(b);
-
-  vector<sl> f3;
-
-  FOR0(i, K) {
-    f3.push_back((f1[i] * f2[i]) % Field::p);
-  }
-
-  return intt<Field>(f3);
-}
+};
