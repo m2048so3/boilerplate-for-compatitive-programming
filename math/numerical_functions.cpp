@@ -2,7 +2,7 @@ bool isprime(const ul& n) {
   if (n < 2 || n % 2 == 0) {
     return false;
   }
-  for (ul i = 1; i * i < n; i += 2) {
+  for (ul i = 3; i * i < n; i += 2) {
     if (n % i == 0) {
       return false;
     }
@@ -81,6 +81,21 @@ T powmod(T x, ul y, ul z) {
 }
 
 template <class T>
+T powint(T x, sl y) {
+  MASSERT(0 < y);
+  T cur = x;
+  T res = 1;
+  while (y != 0) {
+    if ((y & 1) == 1) {
+      res = res * cur;
+    }
+    cur = cur * cur;
+    y >>= 1;
+  }
+  return res;
+}
+
+template <class T>
 T factorial(const T& n) {
   T res = 1;
   FOR0(i, n) {
@@ -91,10 +106,18 @@ T factorial(const T& n) {
 
 template <class T>
 T permutation(const T& n, const T& m) {
-  return factorial(n) / factorial(n - m);
+  T res = 1;
+  FORi(i, n - m, n) {
+    res *= i + 1;
+  }
+  return res;
 }
 
 template <class T>
 T combination(const T& n, const T& m) {
-  return permutation(n, m) / factorial(m);
+  T res = permutation(n, m);
+  FORi(i, 0, m) {
+    res /= i + 1;
+  }
+  return res;
 }
